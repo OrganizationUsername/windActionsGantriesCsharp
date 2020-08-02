@@ -126,6 +126,24 @@ namespace windActionsGantries
         }
 
         /// <summary>
+        /// Function to find intersection point between 2 cartesian points with a known x-value
+        /// </summary>
+        /// <param name="x">Known x-value for which a y-value is needed</param>
+        /// <param name="x0">smaller x-value</param>
+        /// <param name="x1">larger x-value</param>
+        /// <param name="y0">y-value associated with smaller x-value</param>
+        /// <param name="y1">y-value associated with larger x-value</param>
+        /// <returns></returns>
+        static double linear(double x, double x0, double x1, double y0, double y1)
+        {
+            if ((x1 - x0) == 0)
+            {
+                return (y0 + y1) / 2;
+            }
+            return y0 + (x - x0) * (y1 - y0) / (x1 - x0);
+        }
+
+        /// <summary>
         /// Input Terrain and Height as per Australian Code and get the Iz value as per Table 6.1
         /// </summary>
         /// <param name="x">Height of structure under consideration</param>
@@ -154,22 +172,17 @@ namespace windActionsGantries
             }
             return linear(x, h_vals[i-1], h_vals[i],intensity[terrain-1, i-1],intensity[terrain-1, i]);
         }
-        /// <summary>
-        /// Function to find intersection point between 2 cartesian points with a known x-value
-        /// </summary>
-        /// <param name="x">Known x-value for which a y-value is needed</param>
-        /// <param name="x0">smaller x-value</param>
-        /// <param name="x1">larger x-value</param>
-        /// <param name="y0">y-value associated with smaller x-value</param>
-        /// <param name="y1">y-value associated with larger x-value</param>
-        /// <returns></returns>
-        static double linear(double x, double x0, double x1, double y0, double y1)
+
+        public static double inputStrouhal(double x)
         {
-            if ((x1 - x0) == 0)
+            int[] db_vals = { 0, 1, 2, 3, 4, 5, 10};
+            double[] St_vals = new double[] { .12, .12, .06, .06, .15, .11, .09};
+            int i = 0;
+            while (db_vals[i] < x)
             {
-                return (y0 + y1) / 2;
+                i++;
             }
-            return y0 + (x - x0) * (y1 - y0) / (x1 - x0);
+            return linear(x, db_vals[i - 1], db_vals[i], St_vals[i - 1], St_vals[i]);
         }
     }
 }

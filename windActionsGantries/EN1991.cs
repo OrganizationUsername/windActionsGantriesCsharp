@@ -80,6 +80,106 @@ namespace windActionsGantries
             double cd = (1 + 2 * kp * Iv * Math.Sqrt(B2 + R2)) / (1 + 7 * Iv * Math.Sqrt(B2)); //dynamic factor
             double cs_cd = (1 + 2 * kp * Iv * Math.Sqrt(B2 + R2)) / (1 + 7 * Iv); //combined size and dynamic factor
             Console.WriteLine("cs_cd = " + cs_cd);
+            Console.WriteLine(Validation.inputPrintYesNo("Do you want to see the intermediate values ? y = [YES] n = [NO]: ",
+                            @$"TURBULENCE, SPECTRAL FUNC & DAMPING
+                            kr={kr,10:F4}
+                            cr={cr,10:F2}
+                            vm={vm,10:F2}
+                            Iv={Iv,10:F2}
+                            alpha={alpha,7:F2}
+                            L={L,11:F2}
+                            fL={fL,10:F2}
+                            SL={SL,10:F2}
+                            delta_s={delta_s,5:F2}
+                            delta_a={delta_a,5:F2}
+                            STRUCTURAL FACTORS INPUTS:
+                            B2={B2,10:F2}
+                            nh={nh,10:F2}
+                            nb={nb,10:F2}
+                            Rh={Rh,10:F2}
+                            Rb={Rb,10:F2}
+                            R2={R2,10:F2}
+                            v={v,11:F2}
+                            T={T,11:F2}
+                            kp={kp,10:F2}"));
         }
+
+        public void VortexShedding(double d)
+        {
+            double b = g.h; //height of beam variable definition
+            double l = g.b; //Length of beam variable redefinition
+            //Read Graph of Strouhal Number Table E.1 EN1991.1.4
+            double St = Lookups.inputStrouhal(d / b);
+
+            //Critical Wind Velocity vcrit,i
+            double vcrit = b * g.n / St;
+
+            //Scruton Number [Ratio structural mass to fluid mass]
+            //The ability of the structure to absorb and dissipate the energy
+            //from vortex shedding depends on the structural damping
+            double Sc = 2 * delta_s * mass / (ro * b*b);
+
+            //Reynolds Number
+            double v = 15 * Math.Pow(10,-6); //m2/s kinematic velocity of air
+            double Re = b * vcrit / v;
+
+            //Vortex Shedding Action
+            //APPROACH 1
+            double K = 0.1; //Table E.5 for simply supported structure
+            //Correlation Length E 1.5.2.3
+            //clat Calculations Table E.2 & E.3
+            double clat0 = 1.1;
+            double clat = 0;
+            if (vcrit / vm <= 0.83)
+            {
+                clat = clat0;
+            }
+            else if (vcrit / vm <= 1.25)
+            {
+                clat = (3 - 2.4 * vcrit / vm) * clat0;
+            }
+            else
+            {
+                clat0 = 0;
+            }
+
+            //TODO - Check whether manually collating mode shape factors is needed in certain structures
+            //Refer Table E.5 for n and m mode shape factors
+            //Refer Table F.1 for phi.iy.s
+
+            //Calculate correlation lenght factor on assumption of Lj length.
+            double Lj_div_b = 6.0; //TODO CHECK assumption. Based on Sigmund spreadsheets example 30-G
+            double lamda = l / b;
+            double Kw = Math.Min(Math.Cos(Math.PI / 2 * (1 - (Lj_div_b) / lamda)), 0.6);
+            //Max displacement over time of the point with phi_iy = 1
+            double Yfmax = b * (1 / (St*St)) * (1 / Sc) * K * Kw * clat; //E.7
+
+            //Inertia force per unit length
+            double phi_iys = 1; //at midspan normalised
+            double Fw = mass * Math.Pow(2 * Math.PI * g.n, 2) * phi_iys * Yfmax;
+            Console.WriteLine(Fw);
+
+            Console.WriteLine(@$"The maximum displacement over time of a point with phi_iy = 1 is:
+            Yfmax={Yfmax,7:F3} m
+            The inertia force per unit length at distance s along beam [taken as midspan] is:
+            Fw={Fw,10:F0} N/m");
+
+            //Ask user whether intermediate results are required:
+            Console.WriteLine(Validation.inputPrintYesNo("Do you want to see the intermediate values? y = [YES] n = [NO]: ",
+                            @$"delta_s={delta_s:5:F2}
+                            kr={kr,10:F2}
+                            cr={cr,10:F2}
+                            vm={vm,10:F2}
+                            St={St,10:F2}
+                            vcrit={vcrit,7:F2}
+                            Sc={Sc,10:F2}
+                            Re={Re,10:N0}
+                            K={K,11:F2}
+                            clat0={clat0,7:F2}
+                            clat={clat,8:F2}
+                            lamda={lamda,7:F2}
+                            Kw={Kw,10:F2}"));
+        }
+
     }
 }

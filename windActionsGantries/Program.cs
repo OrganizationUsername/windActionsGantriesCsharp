@@ -19,7 +19,8 @@ namespace windActionsGantries
                 Lookups.InputConnecType(),
                 Validation.inputNumber("Enter the mass per unit metre of beam at the mid - span 'mass' in kg / m : "),
                 common1);
-            EN1991_calcs.cs_cd();
+            EN1991_calcs.VortexShedding(1.3);
+            Console.ReadLine();
             //Console.WriteLine(Lookups.inputDampingAS());
             //Console.WriteLine(Validation.inputPrintYesNo("Input Print Yes NO : ","This is a string"));
             //Console.WriteLine(Lookups.InputConnecType());
