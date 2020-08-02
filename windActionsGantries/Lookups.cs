@@ -76,8 +76,7 @@ namespace windActionsGantries
                     delta_s = 0.05;
                     break;
                 case 4:
-                    Console.WriteLine("Please enter a structural damping factor [0 to 0.15 typ] : ");
-                    delta_s = Validation.inputNumber();
+                    delta_s = Validation.inputNumber("Please enter a structural damping factor [0 to 0.15 typ] : ");
                     break;
             }
             return delta_s;
@@ -120,8 +119,7 @@ namespace windActionsGantries
                     output = 0.01;
                     break;
                 case 7:
-                    Console.WriteLine("Please enter a structural damping factor [0 to 0.3 typ] : ");
-                    output = Validation.inputNumber();
+                    output = Validation.inputNumber("Please enter a structural damping factor [0 to 0.3 typ] : ");
                     break;
             }
             return output;

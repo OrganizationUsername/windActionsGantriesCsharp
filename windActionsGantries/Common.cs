@@ -25,7 +25,7 @@ namespace windActionsGantries
         /// <param name="aTitle"></param>
         /// <param name="aAuthor"></param>
         /// <param name="aPages"></param>
-        public Common(double aZ, double aB, double aH, double aN, double aVB, double aCF, double aPages)
+        public Common(double aZ, double aB, double aH, double aN, double aVB, double aCF)
         {
             z = aZ;
             b = aB;
