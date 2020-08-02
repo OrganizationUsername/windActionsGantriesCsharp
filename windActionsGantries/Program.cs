@@ -4,23 +4,6 @@ using System.Linq;
 
 namespace windActionsGantries
 {
-    class User
-    {
-        public string name, location;
-        //Default constructor
-        public User()
-        {
-            name = "Michael";
-            location = "Melbourne";
-        }
-
-        //Parametrized constructor
-        public User(string a, string b)
-        {
-            name = a;
-            location = b;
-        }
-    }
     class Program
     {
         /// <summary>
@@ -29,6 +12,9 @@ namespace windActionsGantries
         /// <param name="args">string array that contains the command line arguments used to invoke the program</param>
         static void Main(string[] args)
         {
+            Console.WriteLine(Lookups.inputDampingAS());
+            Console.WriteLine(Validation.inputPrintYesNo("Input Print Yes NO : ","This is a string"));
+            Console.WriteLine(Lookups.InputConnecType());
             ///Some instance creation of the validation and lookups for testing purposes. To be removed.
             Console.WriteLine(Lookups.InputTerrainIh(15));
             Dictionary<string, double> z0zmin = Lookups.InputTerrain();

@@ -47,6 +47,87 @@ namespace windActionsGantries
             return z0zmin;
         }
         /// <summary>
+        /// Input Connection Type, validate its input and return Damping Factor delta_s
+        /// </summary>
+        /// <returns>Logarithmic decrement of structural damping in the fundamental mode</returns>
+        public static double InputConnecType()
+        {
+            int number = 0;
+            Console.WriteLine(@"Primary plate connections perpendicular to longitudinal axis for Damping
+            1 =[welded] 2 =[high resistance bolts] 3 =[ordinary bolts] 4 =[Enter number...] : ");
+            string input = Console.ReadLine();
+            while (!Int32.TryParse(input, out number) || number < 1 || number > 4)
+            {
+                Console.WriteLine("Value entered is not an integer between 1 and 4! Try Again");
+                input = Console.ReadLine();
+            }
+            //Initialise delta_s variable
+            double delta_s = 0;
+            //Check for input value and return delta_s - damping factor
+            switch (number)
+            {
+                case 1:
+                    delta_s = 0.02;
+                    break;
+                case 2:
+                    delta_s = 0.03;
+                    break;
+                case 3:
+                    delta_s = 0.05;
+                    break;
+                case 4:
+                    Console.WriteLine("Please enter a structural damping factor [0 to 0.15 typ] : ");
+                    delta_s = Validation.inputNumber();
+                    break;
+            }
+            return delta_s;
+        }
+
+        public static double inputDampingAS()
+        {
+            int number = 0;
+            Console.WriteLine(@"Input structural type and case for damping calculations AS1170 Cl6.2.2
+            1 =[steel ULS] 2 =[steel SLS deflection] 3 =[steel SLS acceleration]
+                4 =[concrete ULS] 5 =[concrete SLS deflection] 6 =[concrete SLS acceleration]
+                7 =[Enter number...] : ");
+            string input = Console.ReadLine();
+            while (!Int32.TryParse(input, out number) || number < 1 || number > 7)
+            {
+                Console.WriteLine("Value entered is not an integer between 1 and 7! Try Again");
+                input = Console.ReadLine();
+            }
+            //Initialise delta_s variable
+            double output = 0;
+            //Check for input value and return delta_s - damping factor
+            switch (number)
+            {
+                case 1:
+                    output = 0.02;
+                    break;
+                case 2:
+                    output = 0.012;
+                    break;
+                case 3:
+                    output = 0.01;
+                    break;
+                case 4:
+                    output = 0.03;
+                    break;
+                case 5:
+                    output = 0.015;
+                    break;
+                case 6:
+                    output = 0.01;
+                    break;
+                case 7:
+                    Console.WriteLine("Please enter a structural damping factor [0 to 0.3 typ] : ");
+                    output = Validation.inputNumber();
+                    break;
+            }
+            return output;
+        }
+
+        /// <summary>
         /// Input Terrain and Height as per Australian Code and get the Iz value as per Table 6.1
         /// </summary>
         /// <param name="x">Height of structure under consideration</param>
