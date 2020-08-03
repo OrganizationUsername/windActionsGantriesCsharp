@@ -79,7 +79,7 @@ namespace windActionsGantries
             double cs = (1 + 7 * Iv * Math.Sqrt(B2)) / (1 + 7 * Iv); //size factor
             double cd = (1 + 2 * kp * Iv * Math.Sqrt(B2 + R2)) / (1 + 7 * Iv * Math.Sqrt(B2)); //dynamic factor
             double cs_cd = (1 + 2 * kp * Iv * Math.Sqrt(B2 + R2)) / (1 + 7 * Iv); //combined size and dynamic factor
-            Console.WriteLine("cs_cd = " + cs_cd);
+            Console.WriteLine($"cs_cd =  + {cs_cd,7:F2}");
             Console.WriteLine(Validation.inputPrintYesNo("Do you want to see the intermediate values ? y = [YES] n = [NO]: ",
                             @$"TURBULENCE, SPECTRAL FUNC & DAMPING
                             kr={kr,10:F4}
@@ -148,7 +148,7 @@ namespace windActionsGantries
             //Refer Table F.1 for phi.iy.s
 
             //Calculate correlation lenght factor on assumption of Lj length.
-            double Lj_div_b = 6.0; //TODO CHECK assumption. Based on Sigmund spreadsheets example 30-G
+            double Lj_div_b = 6; //TODO CHECK assumption. Based on Sigmund spreadsheets example 30-G
             double lamda = l / b;
             double Kw = Math.Min(Math.Cos(Math.PI / 2 * (1 - (Lj_div_b) / lamda)), 0.6);
             //Max displacement over time of the point with phi_iy = 1

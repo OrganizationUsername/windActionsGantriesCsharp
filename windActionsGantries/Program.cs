@@ -12,24 +12,32 @@ namespace windActionsGantries
         /// <param name="args">string array that contains the command line arguments used to invoke the program</param>
         static void Main(string[] args)
         {
-            Common common1 = new Common(10, 63, 1.3, 0.5, 30, 2.1);
-            Console.WriteLine(common1.b);
-            EN1991 EN1991_calcs = new EN1991(
-                Lookups.InputTerrain(),
-                Lookups.InputConnecType(),
-                Validation.inputNumber("Enter the mass per unit metre of beam at the mid - span 'mass' in kg / m : "),
-                common1);
-            EN1991_calcs.VortexShedding(1.3);
-            Console.ReadLine();
-            //Console.WriteLine(Lookups.inputDampingAS());
-            //Console.WriteLine(Validation.inputPrintYesNo("Input Print Yes NO : ","This is a string"));
-            //Console.WriteLine(Lookups.InputConnecType());
-            /////Some instance creation of the validation and lookups for testing purposes. To be removed.
-            //Console.WriteLine(Lookups.InputTerrainIh(15));
-            //Dictionary<string, double> z0zmin = Lookups.InputTerrain();
-            //Console.WriteLine(z0zmin["zmin"]);
-            //double number = Validation.inputNumber("Message");
-        }
+            Common structure = new Common(Validation.inputNumber("Enter the height above ground 'z' in metres : "),
+                Validation.inputNumber("Length of Beam perpendicular to the wind 'b' in metres : "),
+                Validation.inputNumber("Height of beam 'h' in metres : "),
+                Validation.inputNumber("Natural Frequency 'n' in Hz : "),
+                Validation.inputNumber("Mean Wind speed 10 min ave [refer Durst Curve for conversion from 3s] 'vb' in m/s: "),
+                Validation.inputNumber("Aerodynamic shape factor 'cf' : "));
+            if (Validation.askBool("Conduct EN1991.1.4 calculations y = [YES] n = [NO] : "))
+            {
+                EN1991 EN1991_calcs = new EN1991(
+            Lookups.InputTerrain(),
+            Lookups.InputConnecType(),
+            Validation.inputNumber("Enter the mass per unit metre of beam at the mid - span 'mass' in kg / m : "),
+                structure);
 
+                if (Validation.askBool(@"Conduct cs_cd calculation AnnB EN1991.1.4 [applies to cantilevers / beams with constant sign
+y = [YES] n = [NO] : "))
+                {
+                    EN1991_calcs.cs_cd();
+                }
+
+                if (Validation.askBool(@"Conduct Vortex Shedding Calculation as per EN1991.1.4 [simply supported beams only]
+y = [YES] n = [NO] : "))
+                {
+                    EN1991_calcs.VortexShedding(Validation.inputNumber("Horizontal width of section 'd' in metres : "));
+                }
+            }
+        }
     }
 }
