@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.30104.148
+VisualStudioVersion = 16.0.30320.27
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "windActionsGantries", "windActionsGantries\windActionsGantries.csproj", "{FD2D0299-18FD-4520-BFAA-94633159F3B2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "windActionsGantries", "windActionsGantries\windActionsGantries.csproj", "{759A4771-1DC4-445A-BBFF-7B794007CA81}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FD2D0299-18FD-4520-BFAA-94633159F3B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FD2D0299-18FD-4520-BFAA-94633159F3B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FD2D0299-18FD-4520-BFAA-94633159F3B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FD2D0299-18FD-4520-BFAA-94633159F3B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{759A4771-1DC4-445A-BBFF-7B794007CA81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{759A4771-1DC4-445A-BBFF-7B794007CA81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{759A4771-1DC4-445A-BBFF-7B794007CA81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{759A4771-1DC4-445A-BBFF-7B794007CA81}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {87BCC88D-3BFA-40EF-B978-34A1C8657B9E}
+		SolutionGuid = {9F264FF3-A48E-4FA5-A87E-E526B108D817}
 	EndGlobalSection
 EndGlobal
