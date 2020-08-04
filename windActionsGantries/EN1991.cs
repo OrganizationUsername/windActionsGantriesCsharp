@@ -106,7 +106,7 @@ namespace windActionsGantries
 
         public void VortexShedding(double d)
         {
-            double b, l, St, vcrit, Sc, v, Re, K, clat0, clat, Lj_div_b, lamda, Kw, Yfmax, phi_iys, Fw;
+            double b, l, St, vcrit, Sc, v, Re, K, clat0, clat, Lj_div_b, lamda, Kw, phi_iys, Fw, Yfmax;
             b = g.h; //height of beam variable definition
             l = g.b; //Length of beam variable redefinition
             //Read Graph of Strouhal Number Table E.1 EN1991.1.4
@@ -150,12 +150,14 @@ namespace windActionsGantries
 
             //Calculate correlation lenght factor on assumption of Lj length.
             Lj_div_b = 6; //TODO CHECK assumption. Based on Sigmund spreadsheets example 30-G
+            Console.WriteLine($"Initial Lj/b assumption = {Lj_div_b,4:F0}");
+            double Lj_div_b2 = 0; //Initial assignment, this will be calculated in the iteration
+            double tolerance = 0.01; //Tolerance to checking Lj_div_b
             lamda = l / b;
             Kw = Math.Min(Math.Cos(Math.PI / 2 * (1 - (Lj_div_b) / lamda)), 0.6);
             //Max displacement over time of the point with phi_iy = 1
-            Yfmax = b * (1 / (St*St)) * (1 / Sc) * K * Kw * clat; //E.7
+            Yfmax = b * (1 / (St * St)) * (1 / Sc) * K * Kw * clat; //E.7
 
-            double Lj_div_b2 = 0;
             if (Yfmax / g.h <= 0.1)
             {
                 Lj_div_b2 = 6;
@@ -169,6 +171,28 @@ namespace windActionsGantries
                 Lj_div_b2 = 12;
             }
 
+            while (Math.Abs(Lj_div_b - Lj_div_b2) > tolerance)
+            {
+                Lj_div_b = Lj_div_b2;
+                Kw = Math.Min(Math.Cos(Math.PI / 2 * (1 - (Lj_div_b) / lamda)), 0.6);
+                //Max displacement over time of the point with phi_iy = 1
+                Yfmax = b * (1 / (St * St)) * (1 / Sc) * K * Kw * clat; //E.7
+
+                if (Yfmax / g.h <= 0.1)
+                {
+                    Lj_div_b2 = 6;
+                }
+                else if (Yfmax / g.h > 0.1 && Yfmax / g.h < 0.6)
+                {
+                    Lj_div_b2 = 4.8 + 12 * Yfmax / g.h;
+                }
+                else
+                {
+                    Lj_div_b2 = 12;
+                }
+                Console.WriteLine($@"Iterated Lj/b value = {Lj_div_b2,4:F2}
+                                    Iterated Yfmax value = {Yfmax,7:F4}");
+            }
             //Inertia force per unit length
             phi_iys = 1; //at midspan normalised
             Fw = mass * Math.Pow(2 * Math.PI * g.n, 2) * phi_iys * Yfmax;
@@ -194,8 +218,7 @@ namespace windActionsGantries
                             clat={clat,8:F2}
                             lamda={lamda,7:F2}
                             Kw={Kw,10:F2}
-                            Lj_div_b={Lj_div_b,4:F2}
-                            Lj_div_b2={Lj_div_b2,3:F2}"));
+                            Lj_div_b={Lj_div_b,4:F2}"));
         }
 
     }
