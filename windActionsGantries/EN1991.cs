@@ -47,38 +47,39 @@ namespace windActionsGantries
         /// <returns>Wind Mean Speed</returns>
         public void cs_cd()
         {
-            double kl = 1.0;
-            double Iv = kl / (c0 * Math.Log(g.z / z0));
+            double kl, Iv, zt, Lt, alpha, L, fL, SL, delta_d, dens_air, delta_a, delta, B2, nh, nb, Rh, Rb, R2, v, T, kp, cs, cd, cs_cd;
+            kl = 1.0;
+            Iv = kl / (c0 * Math.Log(g.z / z0));
 
             // Sec B.1 (1) Wind Turbulence
-            double zt = 200.0; //(m) Reference Height
-            double Lt = 300.0; //(m) Reference Length
-            double alpha = 0.67 + 0.05 * Math.Log(z0);
-            double L = Lt * Math.Pow(Math.Max(zmin, g.z) / zt,alpha);
+            zt = 200.0; //(m) Reference Height
+            Lt = 300.0; //(m) Reference Length
+            alpha = 0.67 + 0.05 * Math.Log(z0);
+            L = Lt * Math.Pow(Math.Max(zmin, g.z) / zt,alpha);
 
             // Sec B.1 (2) Wind Distribution over frequencies - Power spectral function
-            double fL = g.n * L / vm;
-            double SL = 6.8 * fL / Math.Pow((1.0 + 10.2 * fL),5.0/3.0);
+            fL = g.n * L / vm;
+            SL = 6.8 * fL / Math.Pow((1.0 + 10.2 * fL),5.0/3.0);
 
             // F.5 Logarithmic decrement of damping
-            double delta_d = 0.0; //Assumed no special damping devices
-            double dens_air = 1.25; //(kg/m3)
-            double delta_a = g.cf * dens_air * vm / (2 * g.n * mass / g.h);
-            double delta = delta_s + delta_a + delta_d;
+            delta_d = 0.0; //Assumed no special damping devices
+            dens_air = 1.25; //(kg/m3)
+            delta_a = g.cf * dens_air * vm / (2 * g.n * mass / g.h);
+            delta = delta_s + delta_a + delta_d;
 
             // B.2 Structural Factors
-            double B2 = 1.0 / (1.0 + 0.9 * Math.Pow((g.b + g.h) / L,0.63)); //Eq B.3 Background Factor allow lack full pressure correlation
-            double nh = 4.6 * g.h * fL / L;
-            double nb = 4.6 * g.b * fL / L;
-            double Rh = 1.0 / nh - 1 / (2.0 * nh*nh) * (1 - Math.Exp(-2.0 * nh)); //Eq B.7 Aerodynamic admittance function (h)
-            double Rb = 1.0 / nb - 1 / (2.0 * nb*nb) * (1 - Math.Exp(-2.0 * nb)); //Eq B.8 Aerodynamic admittance function (b)
-            double R2 = Math.PI*Math.PI * SL * Rh * Rb / (2.0 * delta); //Eq B.6 Resonance response Factor
-            double v = g.n * Math.Sqrt(R2 / (B2 + R2)); //(Hz) Eq B.5 Up-crossing Frequency
-            double T = 600.0; //(s) Eq B.4 Averaging time for mean wind velocity
-            double kp = Math.Max(Math.Sqrt(2 * Math.Log(v * T)) + 0.6 / Math.Sqrt(2 * Math.Log(v * T)), 3);
-            double cs = (1 + 7 * Iv * Math.Sqrt(B2)) / (1 + 7 * Iv); //size factor
-            double cd = (1 + 2 * kp * Iv * Math.Sqrt(B2 + R2)) / (1 + 7 * Iv * Math.Sqrt(B2)); //dynamic factor
-            double cs_cd = (1 + 2 * kp * Iv * Math.Sqrt(B2 + R2)) / (1 + 7 * Iv); //combined size and dynamic factor
+            B2 = 1.0 / (1.0 + 0.9 * Math.Pow((g.b + g.h) / L,0.63)); //Eq B.3 Background Factor allow lack full pressure correlation
+            nh = 4.6 * g.h * fL / L;
+            nb = 4.6 * g.b * fL / L;
+            Rh = 1.0 / nh - 1 / (2.0 * nh*nh) * (1 - Math.Exp(-2.0 * nh)); //Eq B.7 Aerodynamic admittance function (h)
+            Rb = 1.0 / nb - 1 / (2.0 * nb*nb) * (1 - Math.Exp(-2.0 * nb)); //Eq B.8 Aerodynamic admittance function (b)
+            R2 = Math.PI*Math.PI * SL * Rh * Rb / (2.0 * delta); //Eq B.6 Resonance response Factor
+            v = g.n * Math.Sqrt(R2 / (B2 + R2)); //(Hz) Eq B.5 Up-crossing Frequency
+            T = 600.0; //(s) Eq B.4 Averaging time for mean wind velocity
+            kp = Math.Max(Math.Sqrt(2 * Math.Log(v * T)) + 0.6 / Math.Sqrt(2 * Math.Log(v * T)), 3);
+            cs = (1 + 7 * Iv * Math.Sqrt(B2)) / (1 + 7 * Iv); //size factor
+            cd = (1 + 2 * kp * Iv * Math.Sqrt(B2 + R2)) / (1 + 7 * Iv * Math.Sqrt(B2)); //dynamic factor
+            cs_cd = (1 + 2 * kp * Iv * Math.Sqrt(B2 + R2)) / (1 + 7 * Iv); //combined size and dynamic factor
             Console.WriteLine($"cs_cd =  + {cs_cd,7:F2}");
             Console.WriteLine(Validation.inputPrintYesNo("Do you want to see the intermediate values ? y = [YES] n = [NO]: ",
                             $@"TURBULENCE, SPECTRAL FUNC & DAMPING
@@ -106,7 +107,7 @@ namespace windActionsGantries
 
         public void VortexShedding(double d)
         {
-            double b, l, St, vcrit, Sc, v, Re, K, clat0, clat, Lj_div_b, lamda, Kw, phi_iys, Fw, Yfmax;
+            double b, l, St, vcrit, Sc, v, Re, K, clat0, clat, Lj_div_b, Lj_div_b2, lamda, Kw, phi_iys, Fw, Yfmax, tolerance;
             b = g.h; //height of beam variable definition
             l = g.b; //Length of beam variable redefinition
             //Read Graph of Strouhal Number Table E.1 EN1991.1.4
@@ -151,8 +152,8 @@ namespace windActionsGantries
             //Calculate correlation lenght factor on assumption of Lj length.
             Lj_div_b = 6; //TODO CHECK assumption. Based on Sigmund spreadsheets example 30-G
             Console.WriteLine($"Initial Lj/b assumption = {Lj_div_b,4:F0}");
-            double Lj_div_b2 = 0; //Initial assignment, this will be calculated in the iteration
-            double tolerance = 0.01; //Tolerance to checking Lj_div_b
+            Lj_div_b2 = 0; //Initial assignment, this will be calculated in the iteration
+            tolerance = 0.01; //Tolerance to checking Lj_div_b
             lamda = l / b;
             Kw = Math.Min(Math.Cos(Math.PI / 2 * (1 - (Lj_div_b) / lamda)), 0.6);
             //Max displacement over time of the point with phi_iy = 1
